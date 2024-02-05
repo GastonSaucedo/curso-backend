@@ -16,7 +16,7 @@ let modifProducts = async () => {
         //busqueda por ID
         console.log("===Busco productos por id===\n\n");
         const id1 = 4;
-        const id2 = "amneris";
+        const id2 = "2323232";
         await productManager.getProductByID(id1); //existe
         await productManager.getProductByID(id2); //no existe
         //borrado de productos
