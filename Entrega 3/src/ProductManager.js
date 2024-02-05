@@ -1,4 +1,7 @@
-class Producto {
+import fs from "fs";
+
+
+class Product {
     constructor(title, price, code, stock, description, thumb) {
         this.title = title;
         this.price = price;
@@ -18,9 +21,8 @@ class ProductManager {
     constructor() {
         this.#products = [];
         this.#productsDirPath = "./files";
-        this.#productsFilePath =
-            this.#productsDirPath + "/products.json";
-        this.#fs = require("fs");
+        this.#productsFilePath = this.#productsDirPath + "/products.json";
+        this.#fs = fs;
     }
 
 
@@ -39,7 +41,6 @@ class ProductManager {
             console.log("error creando directorio y archivo", error);
             throw ("error creando directorio y archivo", error);
         } finally {
-            console.log("==termina funcion de crear archivo==\n\n");
         }
     };
 
@@ -49,7 +50,7 @@ class ProductManager {
 
     // AGREGAR PRODUCTOS A LA LISTA
     addProduct = async (title, price, code, stock, description, thumb) => {
-        console.log("=== Empieza la función AddProduct===\n\n");
+
         //verifico si tiene todos los datos. Si no los tiene interrumpe el proceso
         if (!title || !price || !code || !stock || !description || !thumb) {
             return console.log(
@@ -57,7 +58,7 @@ class ProductManager {
             );
         }
         //creo el producto nuevo con la clase Producto
-        let productoNuevo = new Producto(
+        let newProduct = new Product(
             title,
             price,
             code,
@@ -65,30 +66,30 @@ class ProductManager {
             description,
             thumb
         );
-        console.log("Se creará un producto nuevo: ", productoNuevo, "\n\n");
+
         try {
             await this.getProducts();
 
             if (
                 this.#products.find(
-                    (products) => products.code === productoNuevo.code
+                    (products) => products.code === newProduct.code
                 )
             ) {
                 return console.log(
-                    `El producto con código ${productoNuevo.code} ya está en el archivo y no será agregado\n`
+                    `El producto con código ${newProduct.code} ya está en el archivo y no será agregado\n`
                 );
             } else {
                 let maxID = 0;
                 //busco el máximo id para generar un ID nuevo (la opción con length deja de funcionar cuando borro products porque (length + 1) pasa a ser menor que el máximo id que se había generado antes de borrar los products)
                 if (this.#products.length > 0) {
-                    const arrayDeID = this.#products.map((producto) => producto.id);
+                    const arrayDeID = this.#products.map((product) => product.id);
                     maxID =
                         arrayDeID.length > 1
                             ? arrayDeID.reduce((a, b) => Math.max(a, b))
                             : arrayDeID[0];
                 }
                 this.#products.push({
-                    ...productoNuevo,
+                    ...newProduct,
                     id: maxID + 1,
                 });
 
@@ -100,22 +101,22 @@ class ProductManager {
                     JSON.stringify(this.#products, null, 2, "\t")
                 );
                 console.log(
-                    `El producto con código ${productoNuevo.code} fue agregado con éxito\n\n`
+                    `El producto con código ${newProduct.code} fue agregado con éxito\n\n`
                 );
             }
         } catch (error) {
             console.error(
                 `Error creando el producto nuevo: ${JSON.stringify(
-                    productoNuevo
+                    newProduct
                 )}, detalle del error: ${error}`
             );
             throw Error(
                 `Error creando producto nuevo: ${JSON.stringify(
-                    productoNuevo
+                    newProduct
                 )}, detalle del error: ${error}`
             );
         } finally {
-            console.log("===Finaliza función add products===\n\n");
+
         }
     };
 
@@ -125,7 +126,7 @@ class ProductManager {
     // LEO EL ARCHIVO Y OBTENGO LOS PRODUCTOS
     getProducts = async () => {
         try {
-            console.log("===Empieza funcion getProducts===\n\n");
+
             await this.createDir();
             let readedProducts = await this.#fs.promises.readFile(
                 this.#productsFilePath,
@@ -173,14 +174,14 @@ class ProductManager {
                 `Error leyendo los products en get product by id, detalle del error: ${error}`
             );
         } finally {
-            console.log("===Fin get product by id===\n\n");
+
         }
     };
 
-// BORRAR PRODUCTO CON LA ID SELECCIONADA
+    // BORRAR PRODUCTO CON LA ID SELECCIONADA
     deleteProductByID = async (id) => {
         try {
-            console.log("===Empieza función delete===\n\n");
+
             const productoAborrar = await this.getProductByID(id);
             if (productoAborrar) {
                 this.#products.splice(this.#products.indexOf(productoAborrar), 1);
@@ -201,7 +202,7 @@ class ProductManager {
                 `error al tratar de borrar el producto, detalle del error: ${error}`
             );
         } finally {
-            console.log("===Fin de la función para borrar===");
+
         }
     };
 
@@ -234,10 +235,9 @@ class ProductManager {
                 `error al tratar de modificar el producto, detalle del error: ${error}`
             );
         } finally {
-            console.log("===Fin de la función para modificar===");
+
         }
     };
 }
 
-
-module.exports = ProductManager
+export default ProductManager;

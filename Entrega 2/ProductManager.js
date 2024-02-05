@@ -57,7 +57,7 @@ class ProductManager {
             );
         }
         //creo el producto nuevo con la clase Producto
-        let productoNuevo = new Producto(
+        let newProduct = new Producto(
             title,
             price,
             code,
@@ -65,17 +65,17 @@ class ProductManager {
             description,
             thumb
         );
-        console.log("Se creará un producto nuevo: ", productoNuevo, "\n\n");
+        console.log("Se creará un producto nuevo: ", newProduct, "\n\n");
         try {
             await this.getProducts();
 
             if (
                 this.#products.find(
-                    (products) => products.code === productoNuevo.code
+                    (products) => products.code === newProduct.code
                 )
             ) {
                 return console.log(
-                    `El producto con código ${productoNuevo.code} ya está en el archivo y no será agregado\n`
+                    `El producto con código ${newProduct.code} ya está en el archivo y no será agregado\n`
                 );
             } else {
                 let maxID = 0;
@@ -88,7 +88,7 @@ class ProductManager {
                             : arrayDeID[0];
                 }
                 this.#products.push({
-                    ...productoNuevo,
+                    ...newProduct,
                     id: maxID + 1,
                 });
 
@@ -100,18 +100,18 @@ class ProductManager {
                     JSON.stringify(this.#products, null, 2, "\t")
                 );
                 console.log(
-                    `El producto con código ${productoNuevo.code} fue agregado con éxito\n\n`
+                    `El producto con código ${newProduct.code} fue agregado con éxito\n\n`
                 );
             }
         } catch (error) {
             console.error(
                 `Error creando el producto nuevo: ${JSON.stringify(
-                    productoNuevo
+                    newProduct
                 )}, detalle del error: ${error}`
             );
             throw Error(
                 `Error creando producto nuevo: ${JSON.stringify(
-                    productoNuevo
+                    newProduct
                 )}, detalle del error: ${error}`
             );
         } finally {
