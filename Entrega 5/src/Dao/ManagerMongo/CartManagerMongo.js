@@ -1,7 +1,7 @@
 import { cartsModel } from "../../db/models/carts.model.js";
 import { productsModel } from "../../db/models/products.model.js";
 
-export default class CartManager {
+export default class CartsManager {
 
     async addCart() {
         try {
@@ -15,31 +15,57 @@ export default class CartManager {
 
     async getCartById(id) {
         try {
-            const cart = await cartsModel.findById(id);
+            const cart = await cartsModel.findById(id).populate("products.pid");
             return cart;
+
         } catch (error) {
             console.log(error);
         }
     }
 
-    async addProductToCart(cartId, productId) {
+    async addProductToCart(cid, pid) {
         try {
-            const cart = await cartsModel.findById(cartId);
+            const cart = await cartsModel.findById(cid);
+            const prod = await productsModel.findById(pid);
+            if (!cart || !prod) {
+                return null;
+            }
+
+            const product = cart.products.find(p => p.pid.toString() === pid);
+            if (!product) {
+                console.log("first");
+                cart.products.push({ pid: productId, quantity: 1 });
+                await cart.save();
+            } else {
+                console.log("second");
+                product.quantity++;
+                await cart.updateOne({ products: cart.products })
+            }
+
+            return cart;
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async deleteProductFromCart(cid, pid) {
+        try {
+            const cart = await cartsModel.findById(cid);
             if (!cart) {
                 return null;
             }
 
-            const pro = await productsModel.findById(productId);
-            if (!pro) {
+            const product = cart.products.find(p => p.pid.toString() === pid);
+            if (!product) {
                 return null;
             }
 
-            const product = cart.products.find((product) => product.pid.toString() === productId);
-            if (!product) {
-                cart.products.push({ pid: productId, quantity: 1 });
-                await cart.save();
+            if (product.quantity > 1) {
+                product.quantity--;
+                await cart.updateOne({ products: cart.products });
             } else {
-                product.quantity++;
+                cart.products = cart.products.filter(p => p.pid.toString() !== pid);
                 await cart.updateOne({ products: cart.products });
             }
 
@@ -50,4 +76,67 @@ export default class CartManager {
         }
     }
 
+    async deleteAllProductsFromCart(cid) {
+        try {
+            const cart = await cartsModel.findById(cid);
+            if (!cart) {
+                return null;
+            }
+
+            cart.products = [];
+            await cart.updateOne({ products: cart.products });
+
+            return cart;
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updateAllProductsFromCart(cid, products) {
+        try {
+            const cart = await cartsModel.findById(cid);
+            if (!cart) {
+                return null;
+            }
+
+            //Verificar si el producto existe en la base de datos
+            for (const product of products) {
+                const prod = await productsModel.findById(product.pid);
+                if (!prod) {
+                    return null;
+                }
+            }
+
+            cart.products = products;
+            await cart.updateOne({ products: cart.products });
+
+            return cart;
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updateProductQuantityFromCart(cid, pid, quantity) {
+        try {
+            const cart = await cartsModel.findById(cid);
+            if (!cart) {
+                return null;
+            }
+
+            const product = cart.products.find(p => p.pid.toString() === pid);
+            if (!product) {
+                return null;
+            }
+
+            product.quantity = quantity;
+            await cart.updateOne({ products: cart.products });
+
+            return cart;
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }

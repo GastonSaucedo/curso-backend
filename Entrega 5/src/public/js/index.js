@@ -1,52 +1,49 @@
+import { Swal } from 'sweetalert2';
 const socket = io()
 
-const btnSend = document.getElementById("send-message");
-const message = document.getElementById("message-area");
-const boxMessages = document.getElementById("chat-box");
-const tituloUsuario = document.getElementById('nombre-to-name')
-const divChat = document.getElementById('chat')
+const btnSend = document.getElementById('send-message');
+const message = document.getElementById('message-area');
+const boxMessages = document.getElementById('chat-box');
+const tituloUsuario = document.getElementById('nombre-to-name');
+const divChat = document.getElementById('chat');
 
 let usuario
 
-// ingreso al chat - colocar el usuario
+//Ingreso al chat - colocar usuario
 Swal.fire({
-    title: 'BIENVENIDO',
-    text: 'Ingresa tu usuario',
+    title: 'Bienvenido!',
+    text: 'Ingrese su nombre de usuario',
     input: 'text',
     inputValidator: (value) => {
         if (!value) {
-            return 'Necesitas ingresar un usuario'
+            return 'Por favor ingrese su nombre de usuario'
         }
-    },
+    }
 }).then((username) => {
     usuario = username.value
-    tituloUsuario.innerText = `Bienvenido ${usuario} al Chat Grupal`
-    // evento del username ingresado
+    tituloUsuario.innerHTML = `Bienvenido${usuario} al chat`
+
     socket.emit('usuarioNuevo', usuario)
-    // inputMensaje.value = ''
 })
 
-btnSend.addEventListener("click", () => {
+btnSend.addEventListener('click', () => {
     if (message.value == "") {
         message.focus();
     } else {
         boxMessages.innerHTML += `
-    <!-- MI MENSAJE -->
-<div class="chat from-message">
+    <div class="chat from-message">
     <div class="detalles">
         <span>Tú</span>
     <p>${message.value}</p>
     </div>
-</div>
+    </div>
     `;
-        scrollBottom();
-        socket.emit("message", { user: usuario, msg: message.value });
+        scrollBBottom();
+        socket.emit('message', { user: usuario, msg: message.value });
         message.value = null;
     }
 });
 
-
-// Chat Anterior
 socket.on('chat', (mensajes) => {
     console.log(mensajes)
 
@@ -59,43 +56,40 @@ socket.on('chat', (mensajes) => {
     divChat.innerHTML = chatParrafo
 })
 
-
-/* ENTER KEY  */
 function enterkey() {
-    keyenter = event.keyCode;
+    keyenter = event.keycode;
     if (keyenter == 13) {
         btnSend.click();
-        scrollBottom();
+        scrollBBottom();
     }
 }
 window.onkeydown = enterkey;
 
-function scrollBottom() {
+function scrollBBottom() {
     boxMessages.scrollTop = boxMessages.scrollHeight;
 }
 
 /* LISTENER SOCKET */
-socket.on("message", (data) => {
+socket.on('message', (data) => {
     boxMessages.innerHTML += `
-<!-- MENSAJE AMIGO -->
-<div class="chat to-message">
+    <div class="chat to-message">
     <div class="detalles">
         <span>${data.user}</span>
     <p>${data.msg}</p>
     </div>
-</div>
-`;
-    scrollBottom()
+    </div>
+    `;
+    scrollBBottom();
 });
 
-// notificacion usuario nuevo conectado
+//Notificación usuario nuevo conectado
 socket.on('broadcast', usuario => {
     Toastify({
         text: `${usuario} conectado al chat`,
         duration: 5000,
-        position: "right", // `left`, `center` or `right`
+        position: 'right',
         style: {
-            background: "linear-gradient(to right, #00b09b, #96c93d)",
-        },
+            background: 'linear-gradient(to right, #00b09b, #96c93d)'
+        }
     }).showToast();
 })
