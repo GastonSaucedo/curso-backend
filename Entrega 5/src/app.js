@@ -70,13 +70,15 @@ io.on('connection', (socket) => {
     })
 })
 
-const URL_MONGO = "mongodb+srv://admin:Madafaka12@cluster0.qnfm9hs.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0"
+
 
 const connectMongoDB = async () => {
     try {
-        mongoose.connect(URL_MONGO)
+        mongoose.connect(process.env.MONGO_URI)
+        console.log("Conectado con exito a MongoDB usando Mongoose")
     } catch (error) {
-
+        console.error("No se pudo conectar a la BD usando Mongoose: " + error)
+        process.exit
     }
 }
 

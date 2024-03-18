@@ -55,7 +55,7 @@ router.get("/:pid", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const product = req.body;
-        if (!product.title || !product.description || !product.price || !product.code || !product.stock || !product.category) {
+        if (!product.title || !product.description || !product.price || !product.code || !product.stock || !product.category) { 
             return res.status(400).send({ status: "error", error: "Falta información del producto" });
         }
 
