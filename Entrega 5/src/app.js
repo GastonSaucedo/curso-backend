@@ -7,6 +7,7 @@ import handlebars from 'express-handlebars'
 import __dirname from './utils.js'
 import { Server } from 'socket.io'
 import { messagesModel } from './db/models/messages.model.js'
+import mongoose from 'mongoose';
 
 
 const app = express();
@@ -68,3 +69,16 @@ io.on('connection', (socket) => {
         socket.emit("chat", messages)
     })
 })
+
+const URL_MONGO = "mongodb+srv://admin:Madafaka12@cluster0.qnfm9hs.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0"
+
+const connectMongoDB = async () => {
+    try {
+        mongoose.connect(URL_MONGO)
+    } catch (error) {
+
+    }
+}
+
+connectMongoDB()
+

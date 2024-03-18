@@ -1,5 +1,6 @@
 import { Router } from "express";
 import ProductManager from "../Dao/ManagerMongo/ProductManagerMongo.js";
+import { productsModel } from "../db/models/products.model.js";
 
 const router = Router();
 const productManager = new ProductManager("./product.json");
@@ -107,5 +108,6 @@ router.delete("/:pid", async (req, res) => {
         res.status(500).send({ status: "error", error: "Error al borrar el producto" });
     }
 })
+
 
 export default router;
