@@ -1,0 +1,32 @@
+<div>
+  <h1>Ecommerce de Gaston</h1>
+  <h6 class="centered">Formulario de Login</h6>
+  <p class="centered">Si no tenés una cuenta con nosotros, create una haciendo
+    click
+    <a href="/users/register">ACÁ</a>
+  </p>
+  <form class="session_form" id="loginForm">
+    <div>
+      <label>Email</label>
+      <input name="userEmail" />
+
+    </div>
+    <div>
+      <label>Contraseña</label>
+      <input type="password" name="userPassword" id="userPassword" />
+
+    </div>
+    <button id="verPassword">👀 Ver Password</button>
+    <div><input type="submit" value="LOGUEARME" /></div>
+
+  </form>
+
+  <p class="centered">Si tenés cuenta de Github, te invitamos a loguearte a
+    través de la misma</p>
+  <p class="centered"><a href="/api/sessions/github">{{!-- <img class="logo" src="/img/invertocat.png"
+        alt="logo github" /> --}}
+      GITHUB</a></p>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/login.js"></script>
