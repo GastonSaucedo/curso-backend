@@ -1,11 +1,11 @@
 import passport from "passport";
-import local from "passport-local";
+import passportLocal from 'passport-local'
 import githubStrategy from "passport-github2";
 import claves from "./enviroment.config.js";
 import userModel from "../services/db/models/users.model.js";
 import { createHash, isValidPassword } from "../../utils.js";
 
-const LocalStrategy = local.Strategy;
+const LocalStrategy = passportLocal.Strategy
 
 const initializePassport = () => {
     /*==================================
@@ -17,7 +17,7 @@ const initializePassport = () => {
             {
                 clientID: claves.clientID,
                 clientSecret: claves.clientSecret,
-                scope: ["user: email"],
+                scope: ["user:email"],
                 callbackUrl: "http://localhost:8080/api/sessions/githubcallback",
             },
             async (accessToken, refreshToken, profile, done) => {
