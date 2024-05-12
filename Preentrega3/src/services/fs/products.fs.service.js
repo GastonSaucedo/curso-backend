@@ -99,8 +99,9 @@ class ProductManager {
           this.#productosRutaArchivo,
           JSON.stringify(this.#productos, null, 2, "\t")
         );
-        let msj = `El producto fue agregado con éxito con id = ${maxID + 1
-          } \n\n`;
+        let msj = `El producto fue agregado con éxito con id = ${
+          maxID + 1
+        } \n\n`;
         return msj;
       }
     } catch (error) {

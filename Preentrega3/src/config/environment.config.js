@@ -31,7 +31,7 @@ const environmentConfig = {
     MONGO: {
       URL:
         MONGO_URL ??
-        "mongodb+srv://admin:Madafaka12@cluster0.qnfm9hs.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0",
+        "mongodb+srv://Amneweb:87a5e76@clustercursocoder.2encwlm.mongodb.net/?retryWrites=true&w=majority&appName=ClusterCursoCoder",
       DB_NAME: MONGO_DB_NAME ?? "ecommerce",
     },
   },

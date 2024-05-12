@@ -18,7 +18,7 @@ import UsersRouter from "./routes/user.routes.js";
 import usersViewsRouter from "./routes/user.views.routes.js";
 
 //import jwtRouter from "./routes/jwt.router.js";
-import messageModel from "./services/daos/messages/messages.model.js";
+import messageModel from "./services/daos/mensajes/messages.model.js";
 const app = express();
 
 app.engine("handlebars", handlebars.engine());

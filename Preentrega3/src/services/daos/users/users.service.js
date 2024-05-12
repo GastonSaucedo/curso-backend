@@ -1,4 +1,4 @@
-import userModel from "./users.service.js";
+import userModel from "./users.model.js";
 
 export default class UserService {
   constructor() {

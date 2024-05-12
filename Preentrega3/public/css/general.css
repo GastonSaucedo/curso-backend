@@ -1,9 +1,10 @@
-body,
-html {
-    font-family: "Nunito", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: normal;
-    font-style: normal;
+body {
+    font-family: helvetica;
+    height: 100vh;
+    background-image: url(../img/background.svg);
+    background-attachment: fixed;
+    background-size: cover;
+    color: whitesmoke;
 
 }
 
@@ -20,7 +21,9 @@ label,
 li,
 a {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: whitesmoke;
 }
+
 
 a {
     color: white;
@@ -58,7 +61,7 @@ form {
 .interna li {
     display: inline;
     list-style-type: none;
-    background-color: white;
+    background-color: rgb(68, 68, 68);
     padding: 0.4em;
     border-radius: 5px;
     font-size: 0.8em;
@@ -113,7 +116,7 @@ form {
     display: flex;
     justify-content: space-between;
     list-style-type: none;
-    background-color: white;
+    background-color: rgb(32, 32, 32);
     padding: 0.4em;
     border-radius: 5px;
     font-size: 0.8em;
@@ -152,7 +155,6 @@ form {
     position: fixed;
     width: 40%;
     background-color: #E5E4E2;
-    color: black;
     padding: 2rem;
     border-radius: 1rem;
     display: flex;
@@ -173,6 +175,7 @@ form {
 
 .small {
     font-size: 0.5em;
+    color: #696969;
 }
 
 .IDproductoModificar {
@@ -204,10 +207,6 @@ nav {
     padding: 10px;
     background-color: #91A3B0;
     color: white;
-}
-
-.navigation li a:hover {
-    color: black;
 }
 
 input {
@@ -289,4 +288,10 @@ section {
 
 .white {
     color: whitesmoke;
+}
+
+.menuCompleto {
+    background-color: #00000077;
+    padding: 1em 0.5em;
+
 }
