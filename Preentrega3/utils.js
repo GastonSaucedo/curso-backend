@@ -113,7 +113,7 @@ export const authToken = (req, res, next) => {
   console.log("el token en el header", authHeader);
 
   //Si se guarda en la cookie.
-  const authCookie = req.cookies["windwardCookie"];
+  const authCookie = req.cookies["token_login"];
   console.log("el token en la cookie", authCookie);
 
   if (authHeader || authCookie) {
@@ -135,24 +135,17 @@ export const authToken = (req, res, next) => {
     }
   );
 };
-//FIXME: por ahora no se usa.
-export const passportCall = (strategy) => {
-  return async (req, res, next) => {
-    console.log("Entrando a llamar strategy: ");
-    console.log(strategy);
-    passport.authenticate(strategy, function (err, user, info) {
-      if (err) return next(err);
-      if (!user) {
-        return res
-          .status(401)
-          .send({ error: info.messages ? info.messages : info.toString() });
-      }
-      console.log("Usuario obtenido del strategy: ");
-      console.log(user);
+
+export const passportJWTCall = async (req, res, next) => {
+  console.log("Entrando a llamar strategy: ");
+
+  passport.authenticate("jwt", function (err, user) {
+    if (err) return next(err);
+    if (user) {
       req.user = user;
-      next();
-    })(req, res, next);
-  };
+    }
+    next();
+  })(req, res, next);
 };
 
 export const authorization = (role) => {

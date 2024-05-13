@@ -10,13 +10,19 @@ const {
   GITHUB_CALLBACK_URL,
   MONGO_URL,
   MONGO_DB_NAME,
+  MAILER_AUTH_PASS,
+  MAILER_EMAIL,
 } = process.env;
 
 const environmentConfig = {
+  MAILER: {
+    AUTH_PASS: MAILER_AUTH_PASS,
+    EMAIL: MAILER_EMAIL,
+  },
   SERVER: {
     PORT: PORT ?? 8080,
     JWT: {
-      SECRET: JWT_SECRET_KEY ?? "SECRET_KEEEY_!",
+      SECRET: JWT_SECRET_KEY,
     },
     COOKIES: {
       AUTH: COOKIE_AUTH_TOKEN_KEY ?? "token_login",
@@ -31,7 +37,7 @@ const environmentConfig = {
     MONGO: {
       URL:
         MONGO_URL ??
-        "mongodb+srv://Amneweb:87a5e76@clustercursocoder.2encwlm.mongodb.net/?retryWrites=true&w=majority&appName=ClusterCursoCoder",
+        "mongodb+srv://admin:Madafaka12@cluster0.qnfm9hs.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0",
       DB_NAME: MONGO_DB_NAME ?? "ecommerce",
     },
   },

@@ -1,5 +1,5 @@
 import express from "express";
-import __dirname from "../utils.js";
+import __dirname, { passportJWTCall } from "../utils.js";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import { environmentConfig } from "./config/environment.config.js";
@@ -14,7 +14,7 @@ import CategoriesRouter from "./routes/category.routes.js";
 import CartsRouter from "./routes/cart.routes.js";
 import ViewsRouter from "./routes/views.routes.js";
 import UsersRouter from "./routes/user.routes.js";
-
+import emailRouter from "./routes/email.routes.js";
 import usersViewsRouter from "./routes/user.views.routes.js";
 
 //import jwtRouter from "./routes/jwt.router.js";
@@ -62,6 +62,8 @@ const httpServer = app.listen(PORT, () => {
 //Middlewares Passport
 initializePassport();
 app.use(passport.initialize());
+app.use(passportJWTCall);
+app.use("/email", emailRouter);
 const viewsRouter = new ViewsRouter();
 app.use("/", viewsRouter.getRouter());
 app.use("/users", usersViewsRouter);
@@ -76,7 +78,7 @@ app.use("/api/users", usersRouter.getRouter());
 
 //FIXME:
 app.get("*", (req, res) => {
-  res.status(400).send("Connot get that URL!!");
+  res.status(400).send("Cannot get that URL!!");
 });
 const url = environmentConfig.DATABASE.MONGO.URL;
 const db = environmentConfig.DATABASE.MONGO.DB_NAME;

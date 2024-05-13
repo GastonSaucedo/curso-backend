@@ -1,15 +1,17 @@
 import UserService from "../services/daos/users/users.service.js";
 import CartService from "../services/daos/carts/carts.service.js";
-import { environmentConfig } from "../config/environment.config.js";
+import TicketsService from "../services/daos/tickets/tickets.service.js";
 import pc from "picocolors";
 import { createHash, isValidPassword, generateJWToken } from "../../utils.js";
 
 export default class UsersController {
   #userService;
   #cartService;
+  #ticketsService;
   constructor() {
     this.#userService = new UserService();
     this.#cartService = new CartService();
+    this.#ticketsService = new TicketsService();
   }
 
   getAll = async (req, res) => {
@@ -20,6 +22,7 @@ export default class UsersController {
   getByUsername = async (req, res) => {
     console.log("dentro de getByUsername");
     console.log(req.user.email);
+    const filtro = req.query.filtro && req.query.filtro;
     try {
       const user = await this.#userService.findByUsername(req.user.email);
       console.log("user en getbyusername ", user);
@@ -28,7 +31,8 @@ export default class UsersController {
           .status(202)
           .json({ message: "User not found with email: " + req.user.email });
       }
-      res.json(user);
+      const respuesta = filtro ? user[filtro] : user;
+      res.json(respuesta);
     } catch (error) {
       console.error(
         "Error consultando el usuario con email: " + req.user.email
@@ -36,9 +40,35 @@ export default class UsersController {
     }
   };
 
+  getCart = async (req, res) => {
+    try {
+      await this.#userService.findByUsername(req.user.email).then((result) => {
+        console.log("primer result ", result);
+        if (!result) {
+          return res.status(202).json({
+            message: "User not found with email: " + req.user.email,
+          });
+        }
+
+        try {
+          console.log("result pra get cart by id ", result);
+          this.#cartService
+            .getCartByID(result.userCartID)
+            .then((result) => res.json(result));
+        } catch (e) {
+          console.error("No se pudo obtener el carrito ");
+        }
+      });
+    } catch (error) {
+      console.error(
+        "Error consultando el usuario con email: " + req.user.email
+      );
+    }
+  };
   addCart = async (req, res) => {
-    const value = req.params.cid;
-    console.log("usuario en el req despues del middleware authToken");
+    const value = [req.params.cid];
+
+    //TODO: le saqué el middleware de la ruta. Hay que verificar qué pasa
     console.log(req.user);
     const user = await this.#userService.findByUsername(req.user.email);
     console.log("Usuario encontrado para login:");
@@ -63,6 +93,9 @@ export default class UsersController {
   };
 
   getCurrentUser = (req, res) => {
+    console.log(pc.bgYellow("en get current user dentro del controlador "));
+
+    console.log(req.user);
     res.sendSuccess(req.user);
   };
 
@@ -103,8 +136,8 @@ export default class UsersController {
       const access_token = generateJWToken(tokenUser); // Genera JWT Token que contiene la info del user
       console.log("token generado ", access_token);
       res
-        .cookie("windwardCookie", access_token, {
-          maxAge: 120000,
+        .cookie("token_login", access_token, {
+          maxAge: 240000,
           httpOnly: true,
         })
         .send({
@@ -153,11 +186,23 @@ export default class UsersController {
     });
   };
 
+  getTickets = async (req, res) => {
+    const tickets = await this.#ticketsService.getTicketByUser(req.user.email);
+
+    if (!tickets) {
+      return res.status(500).send({
+        status: "error",
+        error: "No se pueden mostrar los tickets",
+      });
+    }
+    res.status(201).send({ status: "success", payload: tickets });
+  };
+
   logout = (req, res) => {
-    const cookieToken = req.cookies["windwardCookie"];
+    const cookieToken = req.cookies["token_login"];
     console.log("hay cookie token ", cookieToken);
     if (cookieToken)
-      return res.clearCookie("windwardCookie").status(201).send({
+      return res.clearCookie("token_login").status(201).send({
         status: "success",
         message:
           "Te has deslogueado correctamente. Para volver a loguearte, hacé click en el botón de abajo",

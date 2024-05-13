@@ -31,15 +31,22 @@ export default class UsersRouter extends CustomRouter {
     this.put(
       "/cart/:cid",
       ["USER", "ADMIN", "PREMIUM"],
-      authToken,
       usersController.addCart
     );
 
     this.get(
       "/email",
       ["USER", "ADMIN", "PREMIUM"],
-      authToken,
+      //authToken,
       usersController.getByUsername
     );
+    this.get(
+      "/cart",
+      ["USER", "PREMIUM"],
+      //authToken,
+      usersController.getCart
+    );
+    this.get("/filtro/", ["USER", "PREMIUM"], usersController.getByUsername);
+    this.get("/tickets", ["USER", "PREMIUM"], usersController.getTickets);
   }
 }
